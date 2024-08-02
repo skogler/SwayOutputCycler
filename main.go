@@ -40,7 +40,7 @@ var config Config = Config{
 					Serial:       "910NTGYBT391",
 					Position:     [2]int{2560, 0},
 					Resolution:   [2]int{2560, 1440},
-					RefreshRate:  144,
+					RefreshRate:  120,
 					AdaptiveSync: false,
 				},
 				{
@@ -59,7 +59,7 @@ var config Config = Config{
 					Serial:       "910NTGYBT391",
 					Position:     [2]int{0, 0},
 					Resolution:   [2]int{2560, 1440},
-					RefreshRate:  144,
+					RefreshRate:  120,
 					AdaptiveSync: false,
 				},
 			},
@@ -215,10 +215,11 @@ func applyLayout(activeLayoutIdx int) {
 		if monitorId == "" {
 			continue
 		}
-		command := fmt.Sprintf("output \"%v\" res %vx%v pos %v %v",
+		command := fmt.Sprintf("output \"%v\" mode %vx%v@%vHz pos %v %v",
 			monitorId,
 			monitorConfig.Resolution[0],
 			monitorConfig.Resolution[1],
+			monitorConfig.RefreshRate,
 			monitorConfig.Position[0],
 			monitorConfig.Position[1],
 		)
@@ -246,9 +247,9 @@ func initStateFile() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	stateFilePath, err := xdg.StateFile("mmp/activelayout")
+	stateFilePath, err := xdg.StateFile("SwayOutputCycler/activelayout")
 	if err != nil {
-		stateFilePath = homeDir + ".local/state/mmp/activelayout"
+		stateFilePath = homeDir + ".local/state/SwayOutputCycler/activelayout"
 		log.Printf("Failed to detect XDG state dir, using %v", stateFilePath)
 	}
 	stateFileDir := filepath.Dir(stateFilePath)
